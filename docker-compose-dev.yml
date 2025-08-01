@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  fastapi:
+    build: .
+    container_name: FastAPI_App
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/usr/src/app:ro 
+    env_file:
+      - .env.dev
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13
+    container_name: Postgres_DB
+    environment:
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=fastapi
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+
+volumes:
+  postgres-db:
